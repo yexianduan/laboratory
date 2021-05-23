@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yexianduan.laboratory.student.mapper.UserMapper">
+    <select id="queryUserId" resultType="java.lang.Integer">
+        SELECT id
+        FROM user
+        WHERE user.name=#{name}
+    </select>
+
+    <select id="queryUserRole" resultType="com.yexianduan.laboratory.common.pojo.User">
+        SELECT user.id,
+               user.user_name,
+               user.remark,
+               user.status,
+               role.name as role,
+               lab.name as labName
+        FROM user left join (user_role CROSS JOIN role CROSS JOIN lab)
+        ON (user.id=user_role.user_id
+              AND role.id=user_role.role_id
+              AND user.lab_id=lab.id)
+        WHERE 1=1
+        <if test="roleName!=null and roleName!=''">
+            AND user.remark like concat('%',#{roleName},'%')
+        </if>
+        <if test="labName!=null and labName!=''">
+            AND lab.name like concat('%',#{labName},'%')
+        </if>
+        <if test="status!=null and status!=''">
+            AND user.status =#{status}
+        </if>
+        <if test="userName!=null and userName!=''">
+            AND user.user_name like concat('%',#{userName},'%')
+        </if>
+
+    </select>
+
+    <update id="stopRole">
+        UPDATE user
+        SET status=#{status}
+        WHERE id=#{id}
+    </update>
+
+    <insert id="editMenu" >
+      INSERT  INTO user_menu (user_id,menu_id)
+      VALUES 
+      <foreach collection="arrayList" item="menuList" index="index" separator=",">
+          (#{id},#{menuList.id})
+      </foreach>
+    </insert>
+
+    <insert id="insertUserRole" >
+        INSERT  INTO user_role (user_id,role_id)
+        VALUES
+        (#{id},#{roleId})
+    </insert>
+
+    <select id="selectUser" resultType="com.yexianduan.laboratory.common.pojo.User">
+        SELECT *
+        FROM user
+        WHERE user.id=#{id}
+    </select>
+
+    <update id="updateUserPwd">
+        UPDATE user
+        SET user.password=#{pwd}
+        WHERE user.id=#{id}
+    </update>
+    <update id="updateUser">
+        UPDATE user
+        SET user.user_name=#{userName},
+            user.phone=#{phone},
+            user.college=#{college},
+            user.major=#{major}
+        WHERE user.id=#{id}
+    </update>
+
+
+</mapper>

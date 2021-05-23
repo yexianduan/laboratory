@@ -1,0 +1,51 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: laboratoryGateway
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    timeout: 1000
+  cloud:
+    nacos:
+      #配置中心
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+      #注册中心
+      server-addr: 127.0.0.1:8848
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]': #匹配所以请求
+            allowedOrigns: "*"
+            allowedMethods:
+              -GET
+              -POST
+              -PUT
+              -DELETE
+              -OPTIONS
+      discovery:
+        locator:
+          enabled: true #开启动态路由，从微服务中获取服务名
+      routes:
+        - id: laboratory_auth
+          uri: lb://laboratoryAuth
+          predicates:
+            - Path=/auth/**
+        - id: laboratory_student
+          uri: lb://laboratoryStudent
+          predicates:
+            - Path=/student/**
+        - id: laboratory_teacher
+          uri: lb://laboratoryTeacher
+          predicates:
+            - Path=/teacher/**
+        - id: laboratory_all
+          uri: lb://laboratoryAll
+          predicates:
+            - Path=/all/**
+  profiles:
+    active: dev

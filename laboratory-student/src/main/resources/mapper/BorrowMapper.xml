@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yexianduan.laboratory.student.mapper.BorrowMapper">
+    <select id="queryBorrow" resultType="com.yexianduan.laboratory.common.pojo.Borrow">
+        SELECT *
+        FROM borrow
+        WHERE user_id=#{userId} AND device_id=#{deviceId}
+    </select>
+
+    <select id="queryBorrowPage" resultType="com.yexianduan.laboratory.common.pojo.BorrowVO">
+        SELECT borrow.borrow_time,
+               borrow.duration,
+               borrow.status,
+               device.name as name,
+               device.id as deviceId,
+               device.remark as remark,
+               device.price as price,
+               user.id as userId,
+               user.user_name as userName,
+               user.lab_id as labId,
+               user.phone as phone,
+               lab.name as labName
+        FROM borrow,device,user,lab
+        WHERE borrow.device_id=device.id
+              AND user.id=borrow.user_id
+              AND user.lab_id=lab.id
+              AND borrow.status!=4
+              AND borrow.status!=3
+        <if test="deviceName!=null and deviceName!=''">
+            AND device.name like concat('%',#{deviceName},'%')
+        </if>
+        <if test="userName!=null and userName!=''">
+            AND user.user_name like concat('%',#{userName},'%')
+        </if>
+        <if test="userId!=null and userId!=''">
+            AND borrow.user_id=#{userId}
+        </if>
+        <if test="labId!=0">
+            AND user.lab_id=#{labId}
+        </if>
+    </select>
+
+    <delete id="returnDevice">
+        UPDATE borrow
+        SET return_time=#{time} ,
+            status=4
+        WHERE device_id=#{deviceId} AND user_id=#{id}
+    </delete>
+
+    <select id="queryVerify" resultType="com.yexianduan.laboratory.common.pojo.Verify">
+        SELECT device.id as deviceId,
+        device.name as deviceName,
+        borrow.borrow_time as buyTime,
+        device.remark as remark,
+        user.user_name as userName,
+        user.id as userId,
+        user.phone,
+        number,
+        price,
+        lab.name as labName
+        FROM borrow,user,device,lab
+        WHERE
+        borrow.user_id=user.id
+        AND borrow.device_id=device.id
+        AND device.lab_id=lab.id
+        <if test="userName!=null and userName!=''">
+            AND user.user_name like concat('%',#{userName},'%')
+        </if>
+        <if test="deviceName!=null and deviceName!=''">
+            AND device.name  like concat('%',#{deviceName},'%')
+        </if>
+        <if test="labId!=0">
+            AND device.lab_id=#{labId}
+        </if>
+        AND borrow.status=1
+    </select>
+
+    <update id="updateBorrowStatus">
+        UPDATE borrow
+        SET status=#{status}
+        WHERE device_id=#{deviceId}
+              AND user_id=#{userId}
+    </update>
+    
+    <select id="statisticsBorrow" resultType="com.yexianduan.laboratory.common.pojo.Borrow">
+        SELECT borrow.*,user.phone as phone
+        FROM borrow,user
+        WHERE user.id=borrow.user_id
+        <if test="labId!=0">
+            AND user.lab_id=#{labId}
+        </if>
+    </select>
+
+</mapper>

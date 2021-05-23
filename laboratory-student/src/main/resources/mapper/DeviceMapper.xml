@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yexianduan.laboratory.student.mapper.DeviceMapper">
+    <select id="queryDeviceByName" resultType="com.yexianduan.laboratory.common.pojo.Device">
+        SELECT device.*,lab.name as labName
+        FROM device,lab
+        WHERE device.lab_id=lab.id
+        <if test="name!=null and name!=''">
+              AND device.name like concat('%',#{name},'%')
+        </if>
+        <if test="id!=0">
+            AND device.lab_id=#{id}
+        </if>
+    </select>
+
+    <update id="downDeviceNum">
+        UPDATE device
+        SET number=number-1
+        WHERE id=#{id}
+    </update>
+
+    <update id="upDeviceNum">
+        UPDATE device
+        SET number=number+1
+        WHERE id=#{id}
+    </update>
+
+    <select id="queryDeviceNum" resultType="java.lang.Integer">
+        SELECT number
+        FROM device
+        WHERE id=#{id}
+    </select>
+
+    <update id="updateDeviceStatus">
+        UPDATE device
+        SET status=#{status}
+        WHERE id=#{id}
+    </update>
+
+    <select id="queryVerify" resultType="com.yexianduan.laboratory.common.pojo.Verify">
+        SELECT device.id as deviceId,
+               device.name as deviceName,
+               device.buy_time as buyTime,
+               device.remark as remark,
+               user.user_name as userName,
+               user.id as userId,
+               user.phone,
+               number,
+               price,
+               lab.name as labName
+        FROM device,user,lab
+        WHERE
+           device.create_id=user.id
+          AND device.lab_id=lab.id
+        <if test="userName!=null and userName!=''">
+            AND user.user_name like concat('%',#{userName},'%')
+        </if>
+        <if test="deviceName!=null and deviceName!=''">
+            AND device.name  like concat('%',#{deviceName},'%')
+        </if>
+        <if test="labId!=0">
+            AND lab.id  =#{labId}
+        </if>
+        AND device.status=1
+
+    </select>
+</mapper>

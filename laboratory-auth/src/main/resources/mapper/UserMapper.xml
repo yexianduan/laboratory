@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yexianduan.laboratory.auth.mapper.UserMapper">
+    <select id="selectByName" resultType="com.yexianduan.laboratory.common.pojo.User">
+        SELECT user.*,role.name as role
+        FROM user,user_role,role
+        WHERE user.id=user_role.user_id AND role.id=user_role.role_id
+              AND user.nick_name=#{name}
+    </select>
+
+    <select id="selectPermsById" resultType="java.lang.String">
+        SELECT perms
+        FROM user_menu,menu
+        WHERE user_menu.menu_id=menu.id
+              AND user_menu.user_id=#{id}
+    </select>
+    <select id="selectRole" resultType="com.yexianduan.laboratory.common.pojo.Role">
+        SELECT *
+        FROM user_role,user
+        WHERE user_role.user_id=user.id
+    </select>
+</mapper>
+

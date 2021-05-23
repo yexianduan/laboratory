@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/laboratory-all/laboratory-all.iml" filepath="$PROJECT_DIR$/laboratory-all/laboratory-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/laboratory-auth/laboratory-auth.iml" filepath="$PROJECT_DIR$/laboratory-auth/laboratory-auth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/laboratory-common/laboratory-common.iml" filepath="$PROJECT_DIR$/laboratory-common/laboratory-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/laboratory-gateway/laboratory-gateway.iml" filepath="$PROJECT_DIR$/laboratory-gateway/laboratory-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/laboratory-student/laboratory-student.iml" filepath="$PROJECT_DIR$/laboratory-student/laboratory-student.iml" />
+      <module fileurl="file://$PROJECT_DIR$/laboratory-teacher/laboratory-teacher.iml" filepath="$PROJECT_DIR$/laboratory-teacher/laboratory-teacher.iml" />
+    </modules>
+  </component>
+</project>
